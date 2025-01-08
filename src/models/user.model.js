@@ -1,6 +1,26 @@
-import mongoose from "mongoose";
+import mongoose, { modelNames } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+const preferencesSchema = new mongoose.Schema({
+  domain: { type: [String], default: [] },
+  tech: { type: [String], default: [] },
+  interests: { type: [String], default: [] },
+});
+
+const studentSchema = new mongoose.Schema({
+  collegeName: { type: String, default: null },
+  passingYear: { type: Number, default: null },
+  degree: { type: String, default: null },
+  resume: { type: String, default: null }, // Optional: URL to resume
+});
+
+const alumniSchema = new mongoose.Schema({
+  companyName: { type: String, default: null },
+  collegeName: { type: String, default: null },
+  passingYear: { type: Number, default: null },
+  currentPosition: { type: String, default: null },
+  linkedInProfile: { type: String, default: null }, // Optional: URL to LinkedIn
+});
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,6 +33,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["student", "alumni", "admin"],
     },
+    preferences: preferencesSchema,
     profileImage: {
       type: String,
       default: "Link of default image",
@@ -21,6 +42,8 @@ const userSchema = new mongoose.Schema(
     verifiedAt: { type: Date, default: null },
     isDeleted: { type: Boolean, default: false },
     refreshToken: { type: String },
+    studentInfo: studentSchema,
+    alumniInfo: alumniSchema,
   },
   { timestamps: true }
 );
