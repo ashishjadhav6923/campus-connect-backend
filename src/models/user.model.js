@@ -24,7 +24,6 @@ const alumniSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema(
   {
-    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true, minLength: 3, maxLength: 50 },
     email: { type: String, required: true, unique: true },
@@ -70,7 +69,8 @@ userSchema.methods.generateAccessToken = function () {
   const user = this;
   return jwt.sign(
     {
-      username: user.username,
+      id: user._id,
+      email: user.email,
       role: user.role,
       isVerified: user.isVerified,
     },
@@ -83,7 +83,8 @@ userSchema.methods.generateRefreshToken = function () {
   const user = this;
   return jwt.sign(
     {
-      username: user.username,
+      id: user._id,
+      email: user.email,
       role: user.role,
     },
     process.env.REFRESH_TOKEN_SECRET,
