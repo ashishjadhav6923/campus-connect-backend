@@ -84,8 +84,6 @@ userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       id: user._id,
-      email: user.email,
-      role: user.role,
     },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: `${process.env.REFRESH_TOKEN_EXPIRY || "30d"}` }

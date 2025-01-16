@@ -3,6 +3,7 @@ import apiResponse from "../utils/apiResponse.js";
 import { User } from "../models/user.model.js";
 import apiError from "../utils/apiError.js";
 import generateAccessAndRefereshTokens from "../utils/generateJwtTokens.js";
+import jwt from "jsonwebtoken";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   httpOnly: true,
@@ -45,14 +46,14 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
   // remove tokens from db
-  const user = await User.findByIdAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
     {
       $set: { refreshToken: undefined },
     },
     { new: true }
   );
-  if (!user) {
+  if (!updatedUser) {
     throw new apiError(500, "Internal Server Error");
   }
   // send res if succ
@@ -63,7 +64,34 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, "User Logged Out Successfully"));
 });
 
-export { loginUser, logoutUser };
+const refresh_AccessToken = asyncHandler(async (req, res) => {
+  const refreshTokenFromUser =
+    req.cookies?.refreshToken || req.body.refreshToken;
+  if (!refreshTokenFromUser) {
+    throw new apiError(401, "Unauthorized request");
+  }
+  const decodedToken = jwt.verify(
+    refreshTokenFromUser,
+    process.env.REFRESH_TOKEN_SECRET
+  );
+  const user = await User.findById(decodedToken?.id);
+  if (!user) {
+    throw new apiError(401, "Invalid Refresh Token");
+  }
+  if (refreshTokenFromUser !== user.refreshToken) {
+    throw new apiError(401, "Refresh Token is expired or used");
+  }
+  const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
+    user._id
+  );
+  res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(new apiResponse(200, "Access token refreshed successfully"));
+});
+
+export { loginUser, logoutUser, refresh_AccessToken };
 
 // const registerUser = asyncHandler(async (req, res) => {
 //   //get input data from req
