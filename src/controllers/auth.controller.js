@@ -98,32 +98,32 @@ export { loginUser, logoutUser, refresh_AccessToken };
 //   console.log(req.body);
 //   const { username, password, name, email, role } = req.body;
 //   //check all req fields
-//   if (!username || !password || !name || !email || !role) {
-//     throw new apiError(
-//       422,
-//       "All fields are required: username, password, name, email and role."
-//     );
-//   }
+  // if (!username || !password || !name || !email || !role) {
+  //   throw new apiError(
+  //     422,
+  //     "All fields are required: username, password, name, email and role."
+  //   );
+  // }
 //   //check for role
-//   const allowedRoles = ["student", "alumni", "admin"];
-//   if (!allowedRoles.includes(role)) {
-//     throw new apiError(400, "Invalid role provided.");
-//   }
+  // const allowedRoles = ["student", "alumni", "admin"];
+  // if (!allowedRoles.includes(role)) {
+  //   throw new apiError(400, "Invalid role provided.");
+  // }
 //   //check if username and email exists
-//   const userExists = await User.findOne({ $or: [{ username }, { email }] });
-//   if (userExists) {
-//     throw new apiError(409, `User with Username or Email already exists`);
-//   }
+  // const userExists = await User.findOne({ $or: [{ username }, { email }] });
+  // if (userExists) {
+  //   throw new apiError(409, `User with Username or Email already exists`);
+  // }
 //   //make object using User model
 //   //save to db
-//   const newUser = await User.create({ username, password, name, email, role });
-//   //check if its successful
-//   if (!newUser) {
-//     throw new apiError(
-//       500,
-//       "Something went wrong while registering, Please try again"
-//     );
-//   }
+  // const newUser = await User.create({ username, password, name, email, role });
+  // //check if its successful
+  // if (!newUser) {
+  //   throw new apiError(
+  //     500,
+  //     "Something went wrong while registering, Please try again"
+  //   );
+  // }
 //   //return success res back
 //   return res
 //     .status(201)

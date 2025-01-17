@@ -36,4 +36,14 @@ const verifyJwt = asyncHandler(async (req, res, next) => {
   }
 });
 
-export default verifyJwt;
+const verifyRole = (requiredRole) => {
+  return asyncHandler((req, res, next) => {
+    const userRole = req.user?.role;
+    if (userRole !== requiredRole) {
+      throw new apiError(403, `Access denied. ${requiredRole} only.`);
+    }
+    next();
+  });
+};
+
+export { verifyJwt, verifyRole };

@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     name: { type: String, required: true, minLength: 3, maxLength: 50 },
     email: { type: String, required: true, unique: true },
+    prn: { type: String, required: true, unique: true },
     role: {
       type: String,
       required: true,
