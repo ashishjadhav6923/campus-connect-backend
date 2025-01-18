@@ -1,25 +1,26 @@
 import mongoose, { modelNames } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-const preferencesSchema = new mongoose.Schema({
-  domain: { type: [String], default: [] },
-  tech: { type: [String], default: [] },
-  interests: { type: [String], default: [] },
-});
 
 const studentSchema = new mongoose.Schema({
-  collegeName: { type: String, default: null },
-  passingYear: { type: Number, default: null },
+  yearOfPassing: { type: Number, default: null },
   degree: { type: String, default: null },
-  resume: { type: String, default: null }, // Optional: URL to resume
+  resume: { type: String, default: "" }, // Optional: URL to resume
+  department: { type: String, default: null },
+  domain: { type: String, default: null },
+  industry: { type: String, default: null },
+  preferredCompany: { type: String, default: null },
 });
 
 const alumniSchema = new mongoose.Schema({
+  yearOfPassing: { type: Number, default: null },
+  domain: { type: String, default: null },
+  industry: { type: String, default: null },
   companyName: { type: String, default: null },
+  jobTitle: { type: String, default: "" },
   collegeName: { type: String, default: null },
-  passingYear: { type: Number, default: null },
-  currentPosition: { type: String, default: null },
   linkedInProfile: { type: String, default: null }, // Optional: URL to LinkedIn
+  yearsOfExperience: { type: Number, default: null },
 });
 
 const userSchema = new mongoose.Schema(
@@ -33,7 +34,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["student", "alumni", "admin"],
     },
-    preferences: preferencesSchema,
     profileImage: {
       type: String,
       default: "Link of default image",
