@@ -6,6 +6,6 @@ const alumniRouter = Router();
 
 alumniRouter
   .route("/updateAlumniProfile")
-  .post(verifyJwt, verifyRole("alumni"), updateAlumniProfile);
+  .patch(verifyJwt, verifyRole("alumni"), updateAlumniProfile);
 
 export default alumniRouter;

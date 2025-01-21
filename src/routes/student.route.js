@@ -6,6 +6,6 @@ const studentRouter = Router();
 
 studentRouter
   .route("/updateStudentProfile")
-  .post(verifyJwt, verifyRole("student"), updateStudentProfile);
+  .patch(verifyJwt, verifyRole("student"), updateStudentProfile);
 
 export default studentRouter;
