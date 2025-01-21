@@ -24,7 +24,7 @@ const updateAlumniProfile = asyncHandler(async (req, res) => {
   ) {
     throw new apiError(
       422,
-      "All fields are required: year of Passing, domain, domain, industry,company name,job title ,linkedIn profile and years of experience."
+      "All fields are required: year of Passing, domain, industry,company name,job title ,linkedIn profile and years of experience."
     );
   }
   if (isNaN(yearOfPassing)) {

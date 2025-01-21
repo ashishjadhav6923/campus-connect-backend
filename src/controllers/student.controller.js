@@ -55,4 +55,46 @@ const updateStudentProfile = asyncHandler(async (req, res) => {
   );
 });
 
-export { updateStudentProfile };
+const searchAlumniByFilter = asyncHandler(async (req, res) => {
+  const { domain, companyName, jobTitle } = req.body;
+  if (!domain || !companyName || !jobTitle) {
+    throw new apiError(
+      422,
+      "All fields are required: domain, company name, job title."
+    );
+  }
+  const alumni = await User.find({
+    role: "alumni",
+    "alumniInfo.domain": domain,
+    "alumniInfo.companyName": companyName,
+    "alumniInfo.jobTitle": jobTitle,
+  }).select("name prn profileImage alumniInfo");
+  // const alumni = await User.aggregate([
+  //   { $match: { role: "alumni" } },
+  //   {
+  //     $match: {
+  //       "alumniInfo.domain": domain,
+  //       "alumniInfo.companyName": companyName,
+  //       "alumniInfo.jobTitle": jobTitle,
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       name: 1,
+  //       prn: 1,
+  //       profileImage: 1,
+  //       alumniInfo: 1,
+  //     },
+  //   },
+  // ]);
+  if (!alumni.length) {
+    throw new apiError(404, "No alumni found matching the given criteria.");
+  }
+  res
+    .status(200)
+    .json(
+      new apiResponse(200, "Alumni profiles retrieved successfully.", alumni)
+    );
+});
+
+export { updateStudentProfile, searchAlumniByFilter };
