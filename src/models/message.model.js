@@ -2,26 +2,29 @@ import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema(
   {
-    chatRoomId: {
+    sender: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ChatRoom",
+      ref: "User", // Reference to the User model
       required: true,
-      index: true,
     },
-    senderId: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", // Reference to the User model
       required: true,
-      index: true,
     },
-    message: {
+    content: {
       type: String,
       required: true,
-      minlength: 1,
-      maxlength: 1000,
-      trim: true,
     },
-    isRead: { type: Boolean, default: false },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
+    chatSession: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ChatSession", // To group messages in a single chat session
+      required: true,
+    },
   },
   { timestamps: true }
 );
