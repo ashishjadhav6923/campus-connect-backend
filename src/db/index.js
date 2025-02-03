@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { dbName } from "../constant.js";
 
-const localMongoURI = `mongodb://localhost:27017/${dbName}`;
-
 const connectDB = async () => {
+  const mongoAtlasURI = `${process.env.MONGODB_URI}/${dbName}`;
+  const localMongoURI = `mongodb://localhost:27017/${dbName}`;
   try {
     const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URL}/${dbName}`
+      process.env.NODE_ENV === "dev" ? localMongoURI : mongoAtlasURI
     );
     console.log(
       `Connected to \nDB : ${dbName}, DB HOST :`,
