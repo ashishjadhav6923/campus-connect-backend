@@ -8,6 +8,7 @@ import studentRouter from "./routes/student.route.js";
 import alumniRouter from "./routes/alumni.route.js";
 import userRouter from "./routes/user.route.js";
 const app = express();
+app.use(express.json());
 app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
