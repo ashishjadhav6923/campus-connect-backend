@@ -9,7 +9,7 @@ import alumniRouter from "./routes/alumni.route.js";
 import userRouter from "./routes/user.route.js";
 const app = express();
 app.use(express.json());
-const allowedOrigins = process.env.CORS_ORIGIN
+const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
   : [];
 const corsOptions = {
