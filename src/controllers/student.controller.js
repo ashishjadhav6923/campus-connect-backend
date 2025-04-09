@@ -32,6 +32,8 @@ const updateStudentProfile = asyncHandler(async (req, res) => {
   const updatedStudent = await User.findByIdAndUpdate(
     req.user._id,
     {
+      isVerified:true,
+      verifiedAt: new Date(),
       studentInfo: {
         yearOfPassing,
         department,
