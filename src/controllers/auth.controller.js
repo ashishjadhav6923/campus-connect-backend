@@ -11,6 +11,7 @@ const options = {
   maxAge: 24 * 60 * 60 * 1000, // 24 hours (or your preferred expiration time)
   sameSite: "none", // This is critical for cross-origin requests
   path: "/", // Ensure cookies are available on all paths
+  domain: undefined,
 };
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -60,6 +61,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     throw new apiError(500, "Internal Server Error");
   }
   // send res if succ
+  res.header("Access-Control-Allow-Credentials", "true");
   res
     .status(200)
     .clearCookie("accessToken", options)
@@ -67,18 +69,20 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, "User Logged Out Successfully"));
 });
 
-const verifyToken = asyncHandler(async (req, res) => { 
+const verifyToken = asyncHandler(async (req, res) => {
   // Get the user without sensitive information
-  const user = await User.findById(req.user._id).select("-password -refreshToken");
-  
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+
   if (!user) {
     throw new apiError(404, "User not found");
   }
-  
+
   // Return the user data
   return res.status(200).json(
     new apiResponse(200, "Token verified successfully", {
-      user
+      user,
     })
   );
 });
