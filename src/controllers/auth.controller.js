@@ -7,7 +7,10 @@ import jwt from "jsonwebtoken";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   httpOnly: true,
-  secure: isProduction, // Use secure cookies only in production
+  secure: isProduction, 
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours (or your preferred expiration time)
+  sameSite: 'none', // This is critical for cross-origin requests
+  path: '/' // Ensure cookies are available on all paths
 };
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -32,7 +35,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
-
+  res.header('Access-Control-Allow-Credentials', 'true');
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
