@@ -7,10 +7,10 @@ import jwt from "jsonwebtoken";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   httpOnly: true,
-  secure: isProduction, 
+  secure: isProduction,
   maxAge: 24 * 60 * 60 * 1000, // 24 hours (or your preferred expiration time)
-  sameSite: 'none', // This is critical for cross-origin requests
-  path: '/' // Ensure cookies are available on all paths
+  sameSite: "none", // This is critical for cross-origin requests
+  path: "/", // Ensure cookies are available on all paths
 };
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -35,7 +35,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header("Access-Control-Allow-Credentials", "true");
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
@@ -67,6 +67,22 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, "User Logged Out Successfully"));
 });
 
+const verifyToken = asyncHandler(async (req, res) => { 
+  // Get the user without sensitive information
+  const user = await User.findById(req.user._id).select("-password -refreshToken");
+  
+  if (!user) {
+    throw new apiError(404, "User not found");
+  }
+  
+  // Return the user data
+  return res.status(200).json(
+    new apiResponse(200, "Token verified successfully", {
+      user
+    })
+  );
+});
+
 const refresh_AccessToken = asyncHandler(async (req, res) => {
   const refreshTokenFromUser =
     req.cookies?.refreshToken || req.body.refreshToken;
@@ -94,39 +110,39 @@ const refresh_AccessToken = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, "Access token refreshed successfully"));
 });
 
-export { loginUser, logoutUser, refresh_AccessToken };
+export { loginUser, logoutUser, refresh_AccessToken, verifyToken };
 
 // const registerUser = asyncHandler(async (req, res) => {
 //   //get input data from req
 //   console.log(req.body);
 //   const { username, password, name, email, role } = req.body;
 //   //check all req fields
-  // if (!username || !password || !name || !email || !role) {
-  //   throw new apiError(
-  //     422,
-  //     "All fields are required: username, password, name, email and role."
-  //   );
-  // }
+// if (!username || !password || !name || !email || !role) {
+//   throw new apiError(
+//     422,
+//     "All fields are required: username, password, name, email and role."
+//   );
+// }
 //   //check for role
-  // const allowedRoles = ["student", "alumni", "admin"];
-  // if (!allowedRoles.includes(role)) {
-  //   throw new apiError(400, "Invalid role provided.");
-  // }
+// const allowedRoles = ["student", "alumni", "admin"];
+// if (!allowedRoles.includes(role)) {
+//   throw new apiError(400, "Invalid role provided.");
+// }
 //   //check if username and email exists
-  // const userExists = await User.findOne({ $or: [{ username }, { email }] });
-  // if (userExists) {
-  //   throw new apiError(409, `User with Username or Email already exists`);
-  // }
+// const userExists = await User.findOne({ $or: [{ username }, { email }] });
+// if (userExists) {
+//   throw new apiError(409, `User with Username or Email already exists`);
+// }
 //   //make object using User model
 //   //save to db
-  // const newUser = await User.create({ username, password, name, email, role });
-  // //check if its successful
-  // if (!newUser) {
-  //   throw new apiError(
-  //     500,
-  //     "Something went wrong while registering, Please try again"
-  //   );
-  // }
+// const newUser = await User.create({ username, password, name, email, role });
+// //check if its successful
+// if (!newUser) {
+//   throw new apiError(
+//     500,
+//     "Something went wrong while registering, Please try again"
+//   );
+// }
 //   //return success res back
 //   return res
 //     .status(201)
