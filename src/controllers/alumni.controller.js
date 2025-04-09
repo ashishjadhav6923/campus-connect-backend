@@ -33,6 +33,8 @@ const updateAlumniProfile = asyncHandler(async (req, res) => {
   const updatedAlumni = await User.findByIdAndUpdate(
     req.user._id,
     {
+      isVerified: true,
+      verifiedAt: new Date(),
       alumniInfo: {
         yearOfPassing,
         domain,
