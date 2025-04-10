@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: "Link of default image",
+      default: "",
     },
     isVerified: { type: Boolean, default: false },
     verifiedAt: { type: Date, default: null },
