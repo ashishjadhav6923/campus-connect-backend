@@ -43,8 +43,8 @@ const setupSocket = (server) => {
           lastMessage: newMessage._id,
         });
 
-        // Broadcast the message to the recipient
-        io.to(chatSession).emit("receiveMessage", newMessage);
+        // Emit to everyone in the room EXCEPT the sender
+        socket.to(chatSession).emit("receiveMessage", newMessage);
       } catch (error) {
         console.error("Error sending message:", error);
         socket.emit("error", { message: "Internal Server Error" });
