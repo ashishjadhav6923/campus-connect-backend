@@ -9,22 +9,33 @@ import alumniRouter from "./routes/alumni.route.js";
 import userRouter from "./routes/user.route.js";
 const app = express();
 app.use(express.json());
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
-  : [];
+const allowedOrigins = [
+  'http://localhost:5173',  // Local Vite development server
+  'http://localhost:3000',  // Just in case you use another local port
+  'https://campus-connect-frontend-v2.onrender.com'  // Your deployed frontend
+];
+
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
+    
     if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+      callback(null, true);
     } else {
-      return callback(new Error("Not allowed by CORS"));
+      console.log("Blocked origin:", origin);
+      callback(null, true);  // Change to 'false' for strict CORS enforcement
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials', 'Origin', 'Accept', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie']
 };
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
